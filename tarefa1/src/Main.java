@@ -7,9 +7,13 @@ import entidades.monstros.Globin;
 import entidades.monstros.Monstro;
 import entidades.monstros.Orc;
 
+//gerar numero aleatorio
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Main {
     public static void main(String[] args) throws Exception {
         int contadorturno = 1;
+        Personagem copiamonstro;
         System.out.println("Bem vindo ao RPG!");
         tempoespera(3);
         // criando um heroi
@@ -38,40 +42,43 @@ public class Main {
                 // ganho de experiencia quando vence um monstro
                 heroi.ganharExperiencia(((Monstro) monstro).getXpConcedido());
 
-            } else {
-                System.out.println("Game Over!");
-                return; // Encerra o jogo se o herói for derrotado
             }
             // status apos a batalha
-
-            System.out.println(" ===== Status do Heroi apos a batalha: =====");
-            heroi.status();
-            System.out.println("====================================");
-            System.out.println(" ===== Status do Monstro apos a batalha: =====");
-            monstro.status();
-            System.out.println("====================================");
-            tempoespera(2);
+            exibeStatusTurno(heroi, monstro);
+            // verifica quem ganhou
+            if (heroi.getVida() <= 0) {
+                System.out.println("Game Over!");
+                break;
+            }
         }
         if (heroi.getVida() > 0) {
-            System.out.println();
-            System.out.println("*****************************************************************************");
-            System.out.println(
-                    "************** Parabéns! " + heroi.getNome() + " derrotou todos os monstros! *****************");
-            System.out.println("*****************************************************************************");
+            System.out.println("************************************************************");
+            System.out.println("    Parabéns! " + heroi.getNome() + " derrotou todos os monstros!     ");
+            System.out.println("************************************************************");
         }
+    }
 
+    // funcao que exibe o status dos personagens
+    public static void exibeStatusTurno(Personagem heroi, Personagem monstro) {
+        System.out.println(" ===== Status do Heroi apos a batalha: =====");
+        heroi.status();
+        System.out.println("====================================");
+        System.out.println(" ===== Status do Monstro apos a batalha: =====");
+        monstro.status();
+        System.out.println("====================================");
+        tempoespera(2);
     }
 
     // funcao que cria um heroi aleatorio e retorna o personagem
     public static Personagem criarHeroi() {
-        int x = (int) (Math.random() * 3); // Gera um número aleatório entre 0 e 2
+        int x = ThreadLocalRandom.current().nextInt(3);
         switch (x) {
             case 0:
                 return new Guerreiro("Aragorn", 35, 150, 0, 0);
             case 1:
-                return new Paladino("Valky", 45, 180, 0, 0);
+                return new Arqueiro("Legolas", 40, 200, 0, 0);
             case 2:
-                return new Arqueiro("Legolas", 30, 150, 0, 0);
+                return new Paladino("Valky", 45, 180, 0, 0);
             default:
                 return null;
         }
@@ -81,8 +88,8 @@ public class Main {
     public static Personagem[] criarMonstros() {
         Personagem[] monstros = new Personagem[3];
         monstros[0] = new Globin("Chefe Goblin", 35, 80, 30, 0);
-        monstros[1] = new Dragao("Smaug", 20, 130, 50, 0);
-        monstros[2] = new Orc("Gorbag", 30, 100, 35, 0);
+        monstros[1] = new Dragao("Dragao Smaug", 20, 130, 50, 0);
+        monstros[2] = new Orc("Orc Gorbag", 30, 100, 35, 0);
         return monstros;
     }
 
