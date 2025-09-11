@@ -4,7 +4,7 @@ public abstract class Arma {
     private int dano, minNivel;
 
     //construtor
-    public arma(int dano, int minNivel){
+    public Arma(int dano, int minNivel){
         this.dano = dano;
         this.minNivel = minNivel;
     }
@@ -18,11 +18,11 @@ public abstract class Arma {
         this.dano = dano;
     }
 
-    public int minNivel(){
+    public int getminNivel(){
         return minNivel;
     }
 
-    public void getminNivel(int minNivel){
+    public void setminNivel(int minNivel){
         this.minNivel = minNivel;
     }
 
