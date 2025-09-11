@@ -54,6 +54,4 @@ public abstract class Personagem {
   //metodo abstrato para atacar outro personagem
   public abstract void atacar(Personagem alvo);
   public abstract boolean HabilidadeEspecial(Personagem alvo);
-  public abstract void ganharExperiencia(int xp);
-  public abstract int getXpConcedido();
 }

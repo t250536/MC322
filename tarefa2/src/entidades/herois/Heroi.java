@@ -12,11 +12,6 @@ public abstract class Heroi extends Personagem {
 
   //gets e sets
   //metodos
-   @Override
-   // os herois nao concedem xp, entao retorna 0
-    public int getXpConcedido() {
-        return 0;
-    }
   public void ganharExperiencia(int pt_exp) {
     experiencia += pt_exp;
   }

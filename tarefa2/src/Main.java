@@ -1,6 +1,7 @@
 import entidades.Personagem;
 import entidades.herois.Arqueiro;
 import entidades.herois.Guerreiro;
+import entidades.herois.Heroi;
 import entidades.herois.Paladino;
 import entidades.monstros.Dragao;
 import entidades.monstros.Globin;
@@ -39,8 +40,11 @@ public class Main {
             // condicao que verifica o resultado da batalha
             if (batalha(heroi, monstro)) {
                 // ganho de experiencia quando vence um monstro
-                heroi.ganharExperiencia(((Monstro) monstro).getXpConcedido());
-
+                //downcast
+                if (heroi instanceof Heroi) {
+                    Heroi hero = (Heroi) heroi;
+                    hero.ganharExperiencia(((Monstro) monstro).getXpConcedido());
+                }
             }
             // status apos a batalha
             exibeStatusTurno(heroi, monstro);

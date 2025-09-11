@@ -15,11 +15,6 @@ public abstract class Monstro extends Personagem {
     return xpConcedido;
   }
   //metodos
-  @Override
-  //monstros nao ganham experiencia
-  public void ganharExperiencia(int xp) {
-      return;
-  }
 
   @Override
   public void status() {
