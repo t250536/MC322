@@ -13,7 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Main {
     public static void main(String[] args) throws Exception {
         int contadorturno = 1;
-        Personagem copiamonstro;
         System.out.println("Bem vindo ao RPG!");
         tempoespera(3);
         // criando um heroi
