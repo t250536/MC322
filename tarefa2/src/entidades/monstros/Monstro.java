@@ -1,20 +1,35 @@
 package entidades.monstros;//caminho do pacote
+
+import java.util.ArrayList;
+import java.util.List;
+
 import entidades.Personagem;
+import itens.armas.Arma;
 
 public abstract class Monstro extends Personagem {
+  public List<Arma> dropList;
   public int xpConcedido;
 
-  //construtor
-  public Monstro(String nome, int forca, int vida, int xpConcedido) {
-    super(nome, forca, vida);//chamar o construtor da superclasse Personagem
+  // construtor
+  public Monstro(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList) {
+    super(nome, forca, vida, arma);// chamar o construtor da superclasse Personagem
     this.xpConcedido = xpConcedido;
+    this.dropList = dropsList;
   }
 
-  //gets e sets
+  // gets e sets
   public int getXpConcedido() {
     return xpConcedido;
   }
-  //metodos
+
+  // metodos
+  public Arma droparArma() {
+    if (dropList.isEmpty()) {
+      return null; // Retorna null se a lista estiver vazia
+    }
+    int aleatorio = (int) (Math.random() * dropList.size());
+    return dropList.get(aleatorio);
+  }
 
   @Override
   public void status() {
@@ -22,6 +37,7 @@ public abstract class Monstro extends Personagem {
     System.out.println("XP Concedido: " + xpConcedido);
 
   }
+
   @Override
-  public abstract boolean HabilidadeEspecial(Personagem alvo);//metodo abstrato para habilidade especial
+  public abstract boolean HabilidadeEspecial(Personagem alvo);// metodo abstrato para habilidade especial
 }

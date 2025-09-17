@@ -3,7 +3,7 @@ import itens.armas.Arma;
 
 public class Machado extends Arma {
     //construtor
-    public Machado(int dano, int minNivel){
-        super(dano, minNivel);
+    public Machado(int dano, int minNivel, String nome){
+        super(dano, minNivel,nome);
     }
 }

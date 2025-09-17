@@ -1,12 +1,13 @@
 package entidades.herois;
 import entidades.Personagem;
+import itens.armas.Arma;
 
 public class Guerreiro extends Heroi {
     private int furia;
     
     // construtor
-    public Guerreiro(String nome, int forca, int vida, int experiencia,int furia) {
-        super(nome, forca, vida, experiencia); // Chama construtor do Heroi
+    public Guerreiro(String nome, int forca, int vida, Arma arma, int nivel, int experiencia, int experienciaParaProximoNivel, int sorte, int furia) {
+    super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
         this.furia = furia;
     }
     // Gets e Sets
@@ -16,8 +17,8 @@ public class Guerreiro extends Heroi {
     // metodos
     @Override
     public void atacar(Personagem alvo) {
-        int dano = getForca();
-        System.out.println(getNome() + " atacou com espada e escudo! Dano: " + dano);
+        int dano = getDanototal();
+        System.out.println(getNome() + " atacou! Dano: " + dano);
         alvo.receberDano(dano);
         furia += 3; // Aumenta a fúria ao atacar
     }
@@ -27,8 +28,8 @@ public class Guerreiro extends Heroi {
         //condicional que verifica se a habilidade é suficiente
         if (furia > 6) {
             System.out.println(getNome() + " ativou a FÚRIA BERSERK! e teve um Ataque triplicado!");
-            System.out.println("Dano total: " + (getForca() * 3));
-            alvo.receberDano(getForca() * 3);
+            System.out.println("Dano total: " + (getDanototal() * 3));
+            alvo.receberDano(getDanototal() * 3);
             furia -=2; // Reduz a fúria ao usar a habilidade
             return true;
         }

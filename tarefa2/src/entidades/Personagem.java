@@ -1,16 +1,19 @@
 package entidades;//camionho do pacote
+import itens.armas.Arma;
 
 //classe abstrata Personagem
 public abstract class Personagem {
   private String nome;
   private int forca;
   private int vida;
+  private Arma arma;
 
   //construtor
-  public Personagem(String nome, int forca, int vida) {
+  public Personagem(String nome, int forca, int vida, Arma arma) {
     this.nome = nome;
     this.forca = forca;
     this.vida = vida;
+    this.arma = arma;
   }
 
   //sets e gets
@@ -37,6 +40,12 @@ public abstract class Personagem {
   public int getVida() {
     return vida;
   }
+  public void setArma(Arma arma) {
+    this.arma = arma;
+  }
+  public Arma getArma() {
+    return arma;
+  }
 
   //metodos
   public void receberDano(int dano) {
@@ -45,10 +54,22 @@ public abstract class Personagem {
       vida = 0;
     }
   }
+  public int getDanototal(){
+    if(arma != null){
+      return forca + arma.getDano();
+    } else {
+      return forca;
+    }
+  }
   public void status() {
     System.out.println("Nome: " + nome);
     System.out.println("Força: " + forca);
     System.out.println("Pontos de Vida: " + vida);
+    if (arma != null) {
+      System.out.println("Arma equipada: " + arma.getNome() + " (Dano: " + arma.getDano() + ", Nível Mínimo: " + arma.getminNivel() + ")");
+    } else {
+      System.out.println("Nenhuma arma equipada.");
+    }
   }
 
   //metodo abstrato para atacar outro personagem

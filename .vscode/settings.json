@@ -1,8 +1,5 @@
 {
-  "java.project.sourcePaths": [
-    "tarefa1/src",
-    "tarefa2/src"
-  ],
+  "java.project.sourcePaths": ["tarefa1/src", "tarefa2/src"],
   "java.project.outputPath": "bin",
   "java.project.referencedLibraries": [],
   "java.configuration.runtimes": [
@@ -13,5 +10,6 @@
     }
   ],
   "java.jdt.ls.java.home": "C:/Program Files/Java/jdk-21",
-  "java.compile.nullAnalysis.mode": "disabled"
+  "java.compile.nullAnalysis.mode": "disabled",
+  "java.debug.settings.onBuildFailureProceed": true
 }
