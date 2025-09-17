@@ -1,4 +1,4 @@
-package entidades.monstros;//caminho do pacote
+package entidades.monstros;
 
 import java.util.ArrayList;
 import java.util.List;

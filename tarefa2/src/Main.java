@@ -29,7 +29,8 @@ public class Main {
 
         // batalhando o heroi
         for (Fase fase : fases) {
-
+            System.out.println("============================================================");
+            System.out.println("============ Fase de nivel " + fase.getLevel() + " esta comecando! ============");
             // anuncio da batalha
             System.out.println("O heroi " + heroi.getNome()
                     + " chegou ao seu proximo local de batalha: " + fase.getAmbiente()
@@ -128,6 +129,25 @@ public class Main {
 
     }
 
+    // funcao para dropar arma de monstro e equipar no heroi caso o dano for maior e
+    // min nivel tambem
+    private static void droparEEquiparArma(Personagem heroi, Monstro monstro) {
+        Arma armaDropada = monstro.droparArma();
+        if (armaDropada != null) {
+            System.out.println("** " + monstro.getNome() + " dropou a arma: " + armaDropada.getNome() + " **");
+            if (armaDropada.getDano() > heroi.getArma().getDano() && heroi instanceof Heroi
+                    && ((Heroi) heroi).getNivel() >= armaDropada.getminNivel()) {
+                System.out.println("** " + heroi.getNome() + " equipou a nova arma: " + armaDropada.getNome() + " **");
+                heroi.setArma(armaDropada);
+            } else {
+                System.out.println("** " + heroi.getNome()
+                        + " não equipou a nova arma devido ao nivel da arma minimo ou dano inferior ou igual. **");
+            }
+        } else {
+            System.out.println("** " + monstro.getNome() + " não dropou nenhuma arma. **");
+        }
+    }
+
     // funcao que simula a batalha entre heroi e monstro
     public static boolean batalha(Personagem heroi, Personagem monstro) {
         int contador = 1;
@@ -158,18 +178,16 @@ public class Main {
             System.out.println("** " + heroi.getNome() + " venceu a batalha! **");
             // testar a sorte para dropar arma
             int aleatorio = (int) (Math.random() * 2);
-            // if (heroi instanceof Heroi) {
-            // Heroi persona = (Heroi) heroi;
-            // if (aleatorio == persona.getSorte() || aleatorio != persona.getSorte()) {
-            // if (monstro instanceof Monstro) {
-            // System.out.println("lista de drops: " + monstro.);
-            // }
-            // return true;
-            // } else {
-            // System.out.println(heroi.getNome() + " não teve sorte e o monstro não dropou
-            // nenhuma arma.");
-            // }
-            // }
+            int sorteHeroi = 0;
+            if (heroi instanceof Heroi) {
+                sorteHeroi = ((Heroi) heroi).getSorte();
+                if (aleatorio == sorteHeroi) {
+                    droparEEquiparArma(heroi, (Monstro) monstro);
+                } else {
+                    System.out.println("** " + heroi.getNome() + " nao teve sorte para o drop! **");
+                }
+            }
+
             return true;
         } else {
             return false;

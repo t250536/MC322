@@ -9,7 +9,7 @@ public class Orc extends Monstro {
     private int arrebentacao; // Atributo específico do Orc
 
     // Construtor
-    public Orc(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList, int arrebentacao) {
+    public Orc(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList,int arrebentacao) {
         super(nome, forca, vida, arma, xpConcedido, dropsList);
         this.arrebentacao = arrebentacao;
     }

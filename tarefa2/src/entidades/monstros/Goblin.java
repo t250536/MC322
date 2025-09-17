@@ -9,8 +9,7 @@ public class Goblin extends Monstro {
     private int gosmatoxica;
 
     // construtor
-    public Goblin(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList,
-            int gosmatoxica) {
+    public Goblin(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList, int gosmatoxica) {
         super(nome, forca, vida, arma, xpConcedido, dropsList);
         this.gosmatoxica = gosmatoxica;
     }
