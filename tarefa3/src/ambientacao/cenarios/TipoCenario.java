@@ -1,39 +1,59 @@
 package ambientacao.cenarios;
 
-import entidades.herois.Heroi;
+// TipoCenario.java
 public enum TipoCenario {
-  //floresta aplica efeito de diminuir forca e perder vida
-  FLORESTA("UMA FLORESTA DESNSA E SOMBRIA"){
-    @Override
-    public void aplicarEfeito(Heroi heroi) {
-      System.out.println("O heroi se sente sugado pelas sombras.");
-      heroi.diminuirForca(10);
-      heroi.perderVida(25);
+    FLORESTA("Uma densa floresta cheia de mistérios e criaturas ocultas") {
+        @Override
+        public void aplicarEfeitos(Heroi heroi) {
+            System.out.println("O ar puro da floresta revitaliza o herói!");
+            // Exemplo: cura 10% da vida máxima
+            int cura = (int)(heroi.getVidaMaxima() * 0.1);
+            heroi.receberCura(cura);
+        }
+    },
+    
+    CAVERNA("Uma caverna escura e úmida com ecos assustadores") {
+        @Override
+        public void aplicarEfeitos(Heroi heroi) {
+            System.out.println("A escuridão da caverna reduz sua visão e moral!");
+            // Exemplo: reduz defesa temporariamente
+            System.out.println("Defesa do herói reduzida temporariamente!");
+        }
+    },
+    
+    CASTELO("Um castelo imponente com armadilhas e guardas vigilantes") {
+        @Override
+        public void aplicarEfeitos(Heroi heroi) {
+            System.out.println("A arquitetura do castelo oferece pontos estratégicos!");
+            // Exemplo: aumenta chance de crítico
+            System.out.println("Chance de acerto crítico aumentada!");
+        }
+    },
+    
+    PANTANO("Um pântano traiçoeiro com águas paradas e neblina densa") {
+        @Override
+        public void aplicarEfeitos(Heroi heroi) {
+            System.out.println("O terreno lamacento do pântano dificulta seus movimentos!");
+            // Exemplo: reduz velocidade
+            System.out.println("Velocidade do herói reduzida!");
+        }
+    };
+    
+    private final String descricao;
+    
+    TipoCenario(String descricao) {
+        this.descricao = descricao;
     }
-  },
-  //castelo aplica efeito de aumentar forca
-  CASTELO("UM CASTELO ARRUINDO E ASSOMBRADO"){
-    @Override
-    public void aplicarEfeito(Heroi heroi) {
-      System.out.println("O heroi sente arrepios ao entrar no castelo e fica mais corajoso.");
-      heroi.aumentarForca(5);
+    
+    public String getDescricao() {
+        return descricao;
     }
-  },
-  //deserto aplica efeito de perder vida
-  DESERTO("UM DESERTO QUENTE E ARIDO"){
+    
+    // Método abstrato que cada constante deve implementar
+    public abstract void aplicarEfeitos(Heroi heroi);
+    
     @Override
-    public void aplicarEfeito(Heroi heroi) {
-      System.out.println("O heroi sente  um grande cansaço ao caminhar pelo no deserto.");
-      //heroi.perderVida(15);
+    public String toString() {
+        return name() + ": " + descricao;
     }
-  },
-  //caverna aplica efeito de aumentar vida
-  CAVERNA("UMA CAVERNA ESCURA E UMIDA"){
-    @Override
-    public void aplicarEfeito(Heroi heroi) {
-      System.out.println("O heroi sente medo e fica mais alerta na caverna.");
-      //heroi.aumentarvida(35);
-    }
-  };
-
 }

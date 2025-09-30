@@ -1,13 +1,12 @@
 package entidades;
 
 import itens.armas.Arma;
-import acoes.AcaoDeCombate;
 
+//classe abstrata Personagem agora implementa Combatente
 public abstract class Personagem implements Combatente {
     private String nome;
     private int forca;
     private int vida;
-    private int vidaMaxima; // Adicionei para controlar cura
     private Arma arma;
 
     //construtor
@@ -15,18 +14,44 @@ public abstract class Personagem implements Combatente {
         this.nome = nome;
         this.forca = forca;
         this.vida = vida;
-        this.vidaMaxima = vida; // Inicializa vida máxima
         this.arma = arma;
     }
 
-    //sets e gets
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    // Implementação dos métodos da interface Combatente
     
     @Override
     public String getNome() {
         return nome;
+    }
+
+    @Override
+    public boolean estaVivo() {
+        return vida > 0;
+    }
+
+    @Override
+    public void receberDano(int dano) {
+        vida -= dano;
+        if (vida < 0) {
+            vida = 0;
+        }
+        System.out.println(nome + " recebeu " + dano + " de dano! Vida: " + vida);
+    }
+
+    @Override
+    public void receberCura(int cura) {
+        vida += cura;
+        System.out.println(nome + " recebeu " + cura + " de cura! Vida: " + vida);
+    }
+
+    // Método abstrato da interface Combatente
+    public abstract void escolherAcao(Combatente alvo);
+
+    // Mantendo os métodos existentes da sua classe
+    
+    //sets e gets
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public void setForca(int forca) {
@@ -39,56 +64,33 @@ public abstract class Personagem implements Combatente {
 
     public void setVida(int vida) {
         this.vida = vida;
-        if (this.vida < 0) this.vida = 0;
-        if (this.vida > vidaMaxima) this.vida = vidaMaxima;
     }
 
     public int getVida() {
         return vida;
     }
-
+    
     public void setArma(Arma arma) {
         this.arma = arma;
     }
-
+    
     public Arma getArma() {
         return arma;
     }
 
-    // Implementação da interface Combatente
-    @Override
-    public void receberDano(int dano) {
-        vida -= dano;
-        if (vida < 0) {
-            vida = 0;
-        }
-    }
-
-    @Override
-    public void receberCura(int cura) {
-        vida += cura;
-        if (vida > vidaMaxima) {
-            vida = vidaMaxima;
-        }
-    }
-
-    @Override
-    public boolean estaVivo() {
-        return vida > 0;
-    }
-
-    public int getDanototal() {
-        if(arma != null) {
+    //metodos
+    public int getDanototal(){
+        if(arma != null){
             return forca + arma.getDano();
         } else {
             return forca;
         }
     }
-
+    
     public void status() {
         System.out.println("Nome: " + nome);
         System.out.println("Força: " + forca);
-        System.out.println("Pontos de Vida: " + vida + "/" + vidaMaxima);
+        System.out.println("Pontos de Vida: " + vida);
         if (arma != null) {
             System.out.println("Arma equipada: " + arma.getNome() + " (Dano: " + arma.getDano() + ", Nível Mínimo: " + arma.getminNivel() + ")");
         } else {
@@ -96,10 +98,7 @@ public abstract class Personagem implements Combatente {
         }
     }
 
-    // Métodos abstratos - REMOVIDOS os que conflitam com novo sistema
-    // public abstract void atacar(Personagem alvo); // REMOVIDO - substituído por sistema de ações
-    // public abstract boolean HabilidadeEspecial(Personagem alvo); // REMOVIDO - substituído por sistema de ações
-    
-    // Método abstrato da interface Combatente - AGORA CORRETO
-    public abstract AcaoDeCombate escolherAcao(Combatente alvo);
+    //mantendo os métodos abstratos existentes
+    public abstract void atacar(Personagem alvo);
+    public abstract boolean HabilidadeEspecial(Personagem alvo);
 }
