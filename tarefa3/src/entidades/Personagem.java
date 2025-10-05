@@ -1,6 +1,7 @@
 package entidades;
 
 import itens.armas.Arma;
+import interfaces.combate.Combatente;
 
 //classe abstrata Personagem agora implementa Combatente
 public abstract class Personagem implements Combatente {
@@ -44,7 +45,7 @@ public abstract class Personagem implements Combatente {
         System.out.println(nome + " recebeu " + cura + " de cura! Vida: " + vida);
     }
 
-    // Método abstrato da interface Combatente
+    // Método abstrato da interface Combatente - deve ser implementado pelas subclasses
     public abstract void escolherAcao(Combatente alvo);
 
     // Mantendo os métodos existentes da sua classe

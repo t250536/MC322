@@ -2,8 +2,9 @@ package entidades.monstros;
 
 import entidades.Personagem;
 import itens.armas.Arma;
-import itens.loot.PocaoCura; // Import adicionado
-import itens.Interface_de_recompensa.Item;
+import itens.PocaoCura; // Import simples
+import acoes.AtaqueFisico;
+import acoes.HabilidadeDeFogo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,13 @@ public class Goblin extends Monstro {
     
     public Goblin() {
         super("Goblin", 8, 30, null, 25, new ArrayList<>());
+        
+        // Definindo loot básico
+        setLootBasico(new PocaoCura(15));
+        
+        // Definindo lista de ações no construtor
+        adicionarAcao(new AtaqueFisico());
+        adicionarAcao(new HabilidadeDeFogo());
     }
     
     @Override
@@ -22,25 +30,7 @@ public class Goblin extends Monstro {
     
     @Override
     public boolean HabilidadeEspecial(Personagem alvo) {
-        System.out.println(getNome() + " tenta fugir!");
-        return Math.random() < 0.5; // 50% de chance
-    }
-    
-    @Override
-    public void escolherAcao(Combatente alvo) {
-        // IA simples: 80% ataque normal, 20% habilidade especial
-        if (Math.random() < 0.8) {
-            atacar((Personagem) alvo);
-        } else {
-            HabilidadeEspecial((Personagem) alvo);
-        }
-    }
-    
-    @Override
-    public Item droparLoot() {
-        // Agora funciona porque PocaoCura está importado
-        return new PocaoCura();
+        System.out.println(getNome() + " usa habilidade especial!");
+        return true;
     }
 }
-
-//ok

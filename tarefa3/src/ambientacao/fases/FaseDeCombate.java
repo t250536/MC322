@@ -2,7 +2,7 @@ package ambientacao.fases;
 
 import entidades.herois.Heroi;
 import entidades.monstros.Monstro;
-import ambientacao.interfaces_de_mundo_e_cenario.Fase;
+import interfaces.mundoCenario.Fase;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class FaseDeCombate implements Fase {
     
     @Override
     public boolean isConcluida() {
-        // Retorna true apenas se todos os monstros foram derrotados
+        // Retorna true apenas quando todos os monstros foram derrotados
         if (concluida) {
             return true;
         }
@@ -41,7 +41,7 @@ public class FaseDeCombate implements Fase {
             }
         }
         
-        // Se chegou aqui, todos os monstros foram derrotados
+        // Todos os monstros foram derrotados
         concluida = true;
         System.out.println("=== FASE " + tipoDeCenario + " CONCLUÍDA ===");
         return true;
@@ -52,28 +52,7 @@ public class FaseDeCombate implements Fase {
         return tipoDeCenario;
     }
     
-    // Métodos auxiliares para acessar os monstros
     public List<Monstro> getMonstros() {
         return monstros;
     }
-    
-    public boolean temMonstrosVivos() {
-        for (Monstro monstro : monstros) {
-            if (monstro.estaVivo()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public Monstro getProximoMonstro() {
-        for (Monstro monstro : monstros) {
-            if (monstro.estaVivo()) {
-                return monstro;
-            }
-        }
-        return null;
-    }
 }
-
-//ok

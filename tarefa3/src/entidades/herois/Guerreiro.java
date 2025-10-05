@@ -2,11 +2,17 @@ package entidades.herois;
 
 import entidades.Personagem;
 import itens.armas.Arma;
+import acoes.AtaqueFisico;
+import acoes.HabilidadeDeFogo;
 
 public class Guerreiro extends Heroi {
     
     public Guerreiro(String nome) {
         super(nome, 15, 100, null, 1, 0, 100, 0);
+        
+        // Definindo lista de ações no construtor
+        adicionarAcao(new AtaqueFisico());
+        adicionarAcao(new HabilidadeDeFogo());
     }
     
     @Override
@@ -19,15 +25,6 @@ public class Guerreiro extends Heroi {
     @Override
     public boolean HabilidadeEspecial(Personagem alvo) {
         System.out.println(getNome() + " usa habilidade especial!");
-        receberCura(20);
         return true;
     }
-    
-    @Override
-    public void escolherAcao(Combatente alvo) {
-        // Simples: sempre ataca
-        atacar((Personagem) alvo);
-    }
 }
-
-//ok

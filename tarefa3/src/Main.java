@@ -1,196 +1,130 @@
-import entidades.Personagem;
-import entidades.herois.Heroi;
+import ambientacao.cenarios.ConstrutorDeCenarioFixo;
 import entidades.herois.Guerreiro;
-import entidades.herois.Arqueiro;
-import entidades.herois.Paladino;
 import entidades.monstros.Monstro;
-import entidades.monstros.Orc;
-import ambientacao.fases.Fase;
-import ambientacao.cenarios.ConstrutorDeCenario;
-import itens.armas.melee.Espada;
-import itens.armas.melee.Faca;
-import itens.armas.melee.Machado;
+import interfaces.combate.Combatente;
+import interfaces.mundoCenario.Fase;
+import interfaces.mundoCenario.GeradorDefases;
+import interfaces.recompensa.Lootavel;
 import itens.armas.Arma;
-
 import java.util.List;
-//gerar numero aleatorio
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        int contadorturno = 1;
-        System.out.println("Bem vindo ao RPG!");
-        tempoespera(3);
-        // criando um heroi
-        Personagem heroi = criarHeroi();
-
-        // criando as fases e seus monstros
-        List<Fase> fases = ConstrutorDeCenario.gerarFases(3);
-
-        // batalhando o heroi
-        for (Fase fase : fases) {
-            System.out.println("============================================================");
-            System.out.println("============ Fase de nivel " + fase.getLevel() + " esta comecando! ============");
-            // anuncio da batalha
-            System.out.println("O heroi " + heroi.getNome()
-                    + " chegou ao seu proximo local de batalha: " + fase.getAmbiente()
-                    + " de nivel " + fase.getLevel());
-
-            // status inicial do heroi
-            System.out.println("----------------------------");
-            System.out.println("Status inicial do Heroi");
-            heroi.status();
-            System.out.println("----------------------------");
-            tempoespera(2);
-
-            // status dos monstros e batalha
-            List<Monstro> monstros = fase.getMonstros();
-            for (Monstro monstro : monstros) {
-                System.out.println("========= Turno " + contadorturno + " =========");
-                contadorturno += 1;
-                tempoespera(2);
-
-                // condicao que verifica o resultado da batalha
-                if (batalha(heroi, monstro)) {
-                    // ganho de experiencia quando vence um monstro
-                    // downcast
-                    if (heroi instanceof Heroi) {
-                        Heroi hero = (Heroi) heroi;
-                        hero.ganharExperiencia(monstro.getXpConcedido());
-                    }
-                }
-                // status apos a batalha
-                exibeStatusTurno(heroi, monstro);
-                // verifica quem ganhou
-                if (heroi.getVida() <= 0) {
-                    System.out.println("Game Over!");
-                    return;
-                }
-            }
-            System.out.println("Parabéns! " + heroi.getNome() + " completou a fase de nivel " + fase.getLevel() + " !");
-            tempoespera(2);
-        }
-
-        if (heroi.getVida() > 0) {
-            System.out.println("************************************************************");
-            System.out.println("    Parabéns! " + heroi.getNome()
-                    + " derrotou todos os monstros e passou em todas as fases!     ");
-            System.out.println("************************************************************");
-        }
-    }
-
-    // funcao que exibe o status dos personagens
-    public static void exibeStatusTurno(Personagem heroi, Personagem monstro) {
-        System.out.println(" ..... Status do Heroi apos a batalha: .....");
-        heroi.status();
-        System.out.println("....................................................");
-        System.out.println("..... Status do Monstro apos a batalha: .....");
-        monstro.status();
-        System.out.println("....................................................");
-        tempoespera(2);
-    }
-
-    // funcao que cria um heroi aleatorio e retorna o personagem
-    public static Personagem criarHeroi() {
-        int x = ThreadLocalRandom.current().nextInt(3);
-        switch (x) {
-            case 0:
-                // nivel, experiencia,experienciaParaProximoNivel,sorte
-                return new Guerreiro("Aragorn", 85, 150,
-                        new Espada(10, 0, "Espada Flamejante"),
-                        0, 0, 170, 0, 0);
-            case 1:
-                return new Arqueiro("Legolas", 70, 200,
-                        new Faca(7, 0, "Faca duplamente laminada"), 0, 0, 190, 0, 0);
-            case 2:
-                return new Paladino("Valky", 75, 180,
-                        new Machado(25, 0, "Machado de Lenhador"), 0, 0, 175, 0, 0);
-            default:
-                return null;
-        }
-    }
-
-    // função para esperar um certo tempo entre as ações
-    public static void tempoespera(int time) {// onde o dobro de time eh 1 segundo
+    
+    // Método auxiliar para fazer pausas
+    private static void aguardar(int segundos) {
         try {
-            Thread.sleep(time * 250);// multiplica por 250 para ficar mais rapido
+            Thread.sleep(segundos/4 * 1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
-
-    // funcao que realiza os ataques dos personagens
-    public static void ataque(Personagem atacante, Personagem alvo) {
-        if (atacante.HabilidadeEspecial(alvo)) {
-            // System.out.println("Habilidade especial de "+atacante.getNome()+" usada!");
-        } else {
-            atacante.atacar(alvo);
-        }
-
-    }
-
-    // funcao para dropar arma de monstro e equipar no heroi caso o dano for maior e
-    // min nivel tambem
-    private static void droparEEquiparArma(Personagem heroi, Monstro monstro) {
-        Arma armaDropada = monstro.droparArma();
-        if (armaDropada != null) {
-            System.out.println("** " + monstro.getNome() + " dropou a arma: " + armaDropada.getNome() + " **");
-            if (armaDropada.getDano() > heroi.getArma().getDano() && heroi instanceof Heroi
-                    && ((Heroi) heroi).getNivel() >= armaDropada.getminNivel()) {
-                System.out.println("** " + heroi.getNome() + " equipou a nova arma: " + armaDropada.getNome() + " **");
-                heroi.setArma(armaDropada);
-            } else {
-                System.out.println("** " + heroi.getNome()
-                        + " não equipou a nova arma devido ao nivel da arma minimo ou dano inferior ou igual. **");
-            }
-        } else {
-            System.out.println("** " + monstro.getNome() + " não dropou nenhuma arma. **");
-        }
-    }
-
-    // funcao que simula a batalha entre heroi e monstro
-    public static boolean batalha(Personagem heroi, Personagem monstro) {
-        int contador = 1;
-        System.out.println("** A batalha entre " + heroi.getNome() + " e " + monstro.getNome() + " começou! **");
-        System.out.println("Status inicial do Monstro:");
-        monstro.status();
-        System.out.println(".................");
-        tempoespera(2);
-        while (heroi.getVida() > 0 && monstro.getVida() > 0) {
-
-            // contador de rodadas
-            System.out.println("--- Rodada: " + contador + " ---");
-            contador += 1;
-            tempoespera(1);
-
-            // funcao de ataque intercalado
-            ataque(heroi, monstro);
-
-            if (monstro.getVida() > 0) {
-                ataque(monstro, heroi);
-            }
-            // verifica o vencedor
-            System.out.println("--------------------");
-            tempoespera(4);
-        }
-        // verifica quem venceu
-        if (heroi.getVida() > 0) {
-            System.out.println("** " + heroi.getNome() + " venceu a batalha! **");
-            // testar a sorte para dropar arma
-            int aleatorio = (int) (Math.random() * 2);
-            int sorteHeroi = 0;
-            if (heroi instanceof Heroi) {
-                sorteHeroi = ((Heroi) heroi).getSorte();
-                if (aleatorio == sorteHeroi) {
-                    droparEEquiparArma(heroi, (Monstro) monstro);
-                } else {
-                    System.out.println("** " + heroi.getNome() + " nao teve sorte para o drop! **");
+    
+    public static void main(String[] args) {
+        System.out.println("=== INICIANDO JOGO RPG ===");
+        System.out.println();
+        aguardar(1);
+        
+        // 1. Criar instância do GeradorDeFases
+        GeradorDefases gerador = new ConstrutorDeCenarioFixo();
+        
+        // 2. Gerar a lista de fases do jogo
+        List<Fase> fases = gerador.gerar(3);
+        
+        // 3. Criar instância do Herói
+        Guerreiro heroi = new Guerreiro("Aragorn");
+        System.out.println("Herói criado: " + heroi.getNome());
+        System.out.println();
+        aguardar(2);
+        
+        // 4. Laço principal que passa por cada fase
+        for (int i = 0; i < fases.size(); i++) {
+            Fase fase = fases.get(i);
+            
+            // Iniciar a fase
+            fase.iniciar(heroi);
+            aguardar(2);
+            
+            // Obter a lista de monstros da fase (precisamos fazer cast para FaseDeCombate)
+            if (fase instanceof ambientacao.fases.FaseDeCombate) {
+                ambientacao.fases.FaseDeCombate faseCombate = (ambientacao.fases.FaseDeCombate) fase;
+                List<Monstro> monstros = faseCombate.getMonstros();
+                
+                // Laço de combate para cada monstro da fase
+                for (int j = 0; j < monstros.size(); j++) {
+                    Monstro monstro = monstros.get(j);
+                    
+                    System.out.println("--- COMBATE CONTRA: " + monstro.getNome() + " ---");
+                    aguardar(2);
+                    
+                    // Laço while que continua enquanto ambos estiverem vivos
+                    while (heroi.estaVivo() && monstro.estaVivo()) {
+                        System.out.println("----- NOVO TURNO -----");
+                        
+                        // Turno do herói
+                        heroi.escolherAcao(monstro);
+                        aguardar(2);
+                        
+                        // Se o monstro morreu, sair do loop
+                        if (!monstro.estaVivo()) {
+                            break;
+                        }
+                        
+                        // Turno do monstro
+                        monstro.escolherAcao(heroi);
+                        aguardar(2);
+                        
+                        System.out.println("----- FIM DO TURNO -----");
+                        System.out.println();
+                        aguardar(2);
+                    }
+                    
+                    // Verificar resultado do combate
+                    if (!monstro.estaVivo()) {
+                        System.out.println("🎉 " + monstro.getNome() + " foi derrotado!");
+                        aguardar(2);
+                        
+                        // Verificar se o monstro é Lootavel e dropar loot
+                        if (monstro instanceof Lootavel) {
+                            Lootavel monstroLootavel = (Lootavel) monstro;
+                            monstroLootavel.droparLoot();
+                            aguardar(2);
+                        }
+                        
+                        // Ganhar experiência
+                        heroi.ganharExperiencia(monstro.getXpConcedido());
+                        aguardar(2);
+                        
+                    } else if (!heroi.estaVivo()) {
+                        System.out.println("💀 " + heroi.getNome() + " foi derrotado por " + monstro.getNome() + "!");
+                        System.out.println("=== FIM DE JOGO ===");
+                        return; // Termina o jogo
+                    }
+                    
+                    System.out.println();
+                    aguardar(2);
                 }
             }
-
-            return true;
-        } else {
-            return false;
+            
+            // Verificar se a fase foi concluída
+            if (fase.isConcluida()) {
+                System.out.println("✅ Fase " + (i + 1) + " concluída com sucesso!");
+                aguardar(2);
+            } else {
+                System.out.println("❌ Fase " + (i + 1) + " não foi concluída!");
+                break;
+            }
+            
+            System.out.println();
+            aguardar(2);
+        }
+        
+        // 5. Se o herói completou todas as fases
+        if (heroi.estaVivo()) {
+            System.out.println("🏆 🏆 🏆 PARABÉNS! 🏆 🏆 🏆");
+            aguardar(2);
+            System.out.println(heroi.getNome() + " completou todas as fases e venceu o jogo!");
+            aguardar(2);
+            System.out.println("=== FIM DE JOGO - VITÓRIA ===");
         }
     }
 }

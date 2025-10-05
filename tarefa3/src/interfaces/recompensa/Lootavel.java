@@ -1,4 +1,4 @@
-package itens.interface_de_recompensa;
+package interfaces.recompensa;
 
 public interface Lootavel {
     Item droparLoot();

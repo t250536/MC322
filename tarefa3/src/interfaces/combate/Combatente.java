@@ -1,9 +1,9 @@
-package entidades.interface_de_combate;
+package interfaces.combate;
 
 public interface Combatente {
     String getNome();
     boolean estaVivo();
     void receberDano(int dano);
     void receberCura(int cura);
-    void escolherAcao(Combatente alvo);
+    void escolherAcao(Combatente alvo);       
 }

@@ -1,6 +1,5 @@
 package entidades.herois;
 import entidades.Personagem;
-import entidades.herois.Heroi;
 import itens.armas.Arma;
 
 public class Paladino extends Heroi {

@@ -2,12 +2,11 @@ package entidades.herois;
 
 import entidades.Personagem;
 import itens.armas.Arma;
+import interfaces.combate.AcaoDeCombate;
+import interfaces.combate.Combatente;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-// Import necessário para a interface AcaoDeCombate
-import entidades.interface_de_combate.AcaoDeCombate;
 
 public abstract class Heroi extends Personagem {
     private int nivel;
@@ -29,16 +28,6 @@ public abstract class Heroi extends Personagem {
         this.random = new Random();
     }
 
-    // Método para adicionar ações à lista
-    public void adicionarAcao(AcaoDeCombate acao) {
-        acoes.add(acao);
-    }
-    
-    // Método para obter a lista de ações (pode ser útil)
-    public List<AcaoDeCombate> getAcoes() {
-        return acoes;
-    }
-
     // Implementação do método escolherAcao da interface Combatente
     @Override
     public void escolherAcao(Combatente alvo) {
@@ -50,18 +39,22 @@ public abstract class Heroi extends Personagem {
         }
         
         // Simula escolha do jogador sem entrada de dados
-        // Estratégia: prioriza habilidades especiais com base na sorte, senão usa ação aleatória
-        if (getSorte() == 1 && HabilidadeEspecial((Personagem) alvo)) {
-            // Se tiver sorte, tenta usar habilidade especial
-            System.out.println(getNome() + " teve sorte e usou uma habilidade especial!");
-        } else {
-            // Escolhe uma ação aleatória da lista
-            int indiceAcao = random.nextInt(acoes.size());
-            AcaoDeCombate acaoEscolhida = acoes.get(indiceAcao);
-            
-            System.out.println(getNome() + " escolheu: " + acaoEscolhida.getClass().getSimpleName());
-            acaoEscolhida.executar(this, alvo);
-        }
+        // Estratégia: escolhe uma ação aleatória da lista
+        int indiceAcao = random.nextInt(acoes.size());
+        AcaoDeCombate acaoEscolhida = acoes.get(indiceAcao);
+        
+        System.out.println(getNome() + " escolheu ação: " + acaoEscolhida.getClass().getSimpleName());
+        acaoEscolhida.executar(this, alvo);
+    }
+
+    // Método para adicionar ações à lista
+    public void adicionarAcao(AcaoDeCombate acao) {
+        acoes.add(acao);
+    }
+    
+    // Método para obter a lista de ações (pode ser útil)
+    public List<AcaoDeCombate> getAcoes() {
+        return acoes;
     }
 
     //gets e sets
