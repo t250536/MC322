@@ -13,7 +13,7 @@ public class Main {
     // Método auxiliar para fazer pausas
     private static void aguardar(int segundos) {
         try {
-            Thread.sleep(segundos/4 * 1000);
+            Thread.sleep(segundos/2 * 1000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
