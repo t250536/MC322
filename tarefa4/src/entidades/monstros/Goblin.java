@@ -2,23 +2,34 @@ package entidades.monstros;
 
 import entidades.Personagem;
 import itens.armas.Arma;
-import itens.PocaoCura; // Import simples
+import itens.PocaoCura;
 import acoes.AtaqueFisico;
-import acoes.HabilidadeDeFogo;
+import acoes.GosmaToxica;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Goblin extends Monstro {
-    
+    //construtor sem parametros
     public Goblin() {
-        super("Goblin", 8, 30, null, 25, new ArrayList<>());
+        super("Goblin", 8, 30, null, 20, new ArrayList<>());
         
         // Definindo loot básico
         setLootBasico(new PocaoCura(15));
         
         // Definindo lista de ações no construtor
         adicionarAcao(new AtaqueFisico());
-        adicionarAcao(new HabilidadeDeFogo());
+        adicionarAcao(new GosmaToxica());
+    }
+    //construtor com parametros
+    public Goblin(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList) {
+        super(nome, forca, vida, arma, xpConcedido, dropsList);
+        
+        // Definindo loot básico
+        setLootBasico(new PocaoCura(15));
+        
+        // Definindo lista de ações no construtor
+        adicionarAcao(new AtaqueFisico());
+        adicionarAcao(new GosmaToxica());
     }
     
     @Override

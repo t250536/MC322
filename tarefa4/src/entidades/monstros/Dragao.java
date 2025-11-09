@@ -2,41 +2,34 @@ package entidades.monstros;
 
 import java.util.List;
 
+import acoes.AtaqueFisico;
+import acoes.HabilidadeDeFogo;
 import entidades.Personagem;
+import itens.PocaoCura;
 import itens.armas.Arma;
 
 public class Dragao extends Monstro {
-    private int bafoDeFogo;
-
-    // construtor
-    public Dragao(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList, int bafoDeFogo) {
+    public Dragao(String nome, int forca, int vida, Arma arma, int xpConcedido, List<Arma> dropsList) {
         super(nome, forca, vida, arma, xpConcedido, dropsList);
-        this.bafoDeFogo = bafoDeFogo;
+        
+        // Definindo loot básico
+        setLootBasico(new PocaoCura(15));
+        
+        // Definindo lista de ações no construtor
+        adicionarAcao(new AtaqueFisico());
+        adicionarAcao(new HabilidadeDeFogo());
     }
-
-    // Gets e Sets
-    public int getBafodeFogo() {
-        return bafoDeFogo;
-    }
-
-    // metodos
+    
     @Override
     public void atacar(Personagem alvo) {
         int dano = getDanototal();
-        System.out.println(getNome() + " atacou! Dano: " + dano);
+        System.out.println(getNome() + " ataca " + alvo.getNome() + " causando " + dano + " de dano!");
         alvo.receberDano(dano);
-        bafoDeFogo += 3;
     }
-
+    
     @Override
     public boolean HabilidadeEspecial(Personagem alvo) {
-        if (bafoDeFogo > 9) {
-            System.out.println(getNome() + " cuspiu FOGO! Teve um Ataque somado a +40!");
-            System.out.println(" Dano total: " + (getDanototal() + 40));
-            alvo.receberDano(getDanototal() + 40);
-            bafoDeFogo -= 4;
-            return true;
-        }
-        return false;
+        System.out.println(getNome() + " usa habilidade especial!");
+        return true;
     }
 }

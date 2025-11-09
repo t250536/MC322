@@ -7,8 +7,8 @@ import acoes.HabilidadeDeFogo;
 
 public class Guerreiro extends Heroi {
     
-    public Guerreiro(String nome) {
-        super(nome, 15, 100, null, 1, 0, 100, 0);
+    public Guerreiro(String nome, int forca, int vida, Arma arma, int nivel, int experiencia, int experienciaParaProximoNivel, int sorte) {
+    super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
         
         // Definindo lista de ações no construtor
         adicionarAcao(new AtaqueFisico());

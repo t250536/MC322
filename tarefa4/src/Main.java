@@ -1,7 +1,16 @@
 import ambientacao.cenarios.ConstrutorDeCenarioFixo;
 import ambientacao.cenarios.TipoCenario;
+
+import entidades.herois.Heroi;
+import entidades.herois.Arqueiro;
 import entidades.herois.Guerreiro;
+import entidades.herois.Paladino;
+
 import entidades.monstros.Monstro;
+import entidades.monstros.Orc;
+import entidades.monstros.Dragao;
+import entidades.monstros.Goblin;
+
 import interfaces.combate.Combatente;
 import interfaces.mundoCenario.Fase;
 import interfaces.mundoCenario.GeradorDefases;
@@ -16,41 +25,146 @@ public class Main {
     private static void menuescolha() {
         System.out.println("=================================");
         System.out.println("1 - INICIAR O JOGO");
-        System.out.println("2 - VER INFORMAÇÕES DOS HEROIS");
+        System.out.println("2 - VER INFORMAÇÕES DOS HEROIS");//
         System.out.println("3 - VER INFORMAÇÕES DOS MONSTROS");
-        System.out.println("4 - VER INFORMAÇÕES DOS CENARIOS");
+        System.out.println("4 - VER INFORMAÇÕES DOS CENARIOS");//
         System.out.println("5 - SAIR DO JOGO");
         System.out.println("=================================");
     }
 
-    //funcao para exibir o menu principal e ler a escolha do usuario
+    // funcao para exibir o menu principal e ler a escolha do usuario
     private static int menuprincial() {
         menuescolha();
         return InputManager.lerInteiro("Escolha uma opção (1-5): ", 1, 5);
     }
 
+    // funcao que cria herois exemplos para menu
+    private static void exibirInfosHerois() {
+        // criacao de herois exemplos
+        Guerreiro guerreiroExemplo = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
+        Paladino paladinoExemplo = new Paladino("Uther", 12, 110, null, 0, 0, 100, 0);
+        Arqueiro arqueiroExemplo = new Arqueiro("Legolas", 10, 90, null, 0, 0, 100, 0);
+
+        // exibicao das informacoes dos herois
+        System.out.println("=== INFORMAÇÕES DOS HERÓIS ===");
+        System.out.println("obs: valores de forca e vida iniciais, aumentam conforme o nivel do heroi");
+        System.out.println("=== Paladino: ===");
+        paladinoExemplo.status();
+        System.out.println("==================================");
+        System.out.println("=== Guerreiro: ===");
+        guerreiroExemplo.status();
+        System.out.println("==================================");
+        System.out.println("=== Arqueiro: ===");
+        arqueiroExemplo.status();
+        System.out.println("==================================");
+    }
+
+    // funcao que cria monstros exemplos para menu
+    private static void exibirInfosMonstros() {
+        // criacao de monstros exemplos
+        Goblin goblinExemplo = new Goblin("Radbug", 8, 50, null, 20, List.of());
+        Orc orcExemplo = new Orc("Gorbag", 12, 80, null, 40, List.of());
+        Dragao dragaoExemplo = new Dragao("Ancalagon", 20, 100, null, 100, List.of());
+
+        // exibicao das informacoes dos monstros
+        System.out.println("=== INFORMAÇÕES DOS MONSTROS ===");
+        System.out.println("obs: valores de forca e vida aumentam conforme a dificuldade do cenario");
+        System.out.println("=== Goblin: ===");
+        goblinExemplo.status();
+        System.out.println("==================================");
+        System.out.println("=== Orc: ===");
+        orcExemplo.status();
+        System.out.println("==================================");
+        System.out.println("=== Dragão: ===");
+        dragaoExemplo.status();
+        System.out.println("==================================");
+    }
+
+    // funcao que gera um heroi aleatorio
+    private static Heroi criarHeroiAleatorio() {
+        int tipoHeroi = (int) (Math.random() * 3); // Gera um número entre 0 e 2
+        Heroi heroi;
+        switch (tipoHeroi) {
+            case 0:
+                heroi = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
+                break;
+            case 1:
+                heroi = new Paladino("Uther", 12, 110, null, 0, 0, 100, 0);
+                break;
+            case 2:
+                heroi = new Arqueiro("Legolas", 10, 90, null, 0, 0, 100, 0);
+                break;
+            default:
+                heroi = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
+        }
+        return heroi;
+    }
+
+    // funcao que inicia o jogo
+    private static void iniciarJogo() {
+        System.out.println("Iniciando o jogo... (em construção)");
+        // 1. Criar instância do GeradorDeFases
+        GeradorDefases geradorFases = new ConstrutorDeCenarioFixo();
+        // 2. Gerar a lista de fases do jogo
+        List<Fase> fases = geradorFases.gerar(3);
+        // 3. Criar instância do Herói aleatorio
+        Heroi heroigerado = criarHeroiAleatorio();
+        // 4. Laço principal que passa por cada fase
+        for (int i = 0; i < fases.size(); i++) {
+            Fase fase = fases.get(i);
+            // Iniciar a fase
+            fase.iniciar(heroigerado);
+            // Obter a lista de monstros da fase (precisamos fazer cast para FaseDeCombate)
+            if (fase instanceof ambientacao.fases.FaseDeCombate) {
+                ambientacao.fases.FaseDeCombate faseCombate = (ambientacao.fases.FaseDeCombate) fase;
+                List<Monstro> monstros = faseCombate.getMonstros();
+                // Laço de combate para cada monstro da fase
+                for (int j = 0; j < monstros.size(); j++) {
+                    Monstro monstro = monstros.get(j);
+                    System.out.println("--- COMBATE CONTRA: " + monstro.getNome() + " ---");
+                    // Laço while que continua enquanto ambos estiverem vivos
+                    while (heroigerado.estaVivo() && monstro.estaVivo()) {
+                        System.out.println("----- NOVO TURNO -----");
+                        // Turno do herói
+                        heroigerado.escolherAcao(monstro);
+                        // Se o monstro morreu, sair do loop
+                        if (!monstro.estaVivo()) {
+                            System.out.println(monstro.getNome() + " foi derrotado!");
+                            InputManager.esperarEnter("Pressione ENTER para continuar...");
+                            break;
+                        }
+                        // Turno do monstro
+                        monstro.escolherAcao(heroigerado);
+                    }
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         try {
-            //boas vindas
+            // boas vindas
             System.out.println("=== BEM-VINDO AO RPG - THE GAME! ===");
 
-            //laco que exibe o menu principal e processa as escolhas do usuario
+            // laco que exibe o menu principal e processa as escolhas do usuario
             while (true) {
                 int opcao = menuprincial();
                 switch (opcao) {
                     case 1:
-                        System.out.println("Iniciando o jogo...");
-                        // Aqui você pode chamar o método que inicia o jogo
+                        // iniciar o jogo
+                        iniciarJogo();
                         break;
                     case 2:
-                        System.out.println("Informações dos Heróis:");
-                        // Aqui você pode adicionar código para mostrar informações dos heróis
+                        // infos herois
+                        exibirInfosHerois();
+                        InputManager.esperarEnter("Pressione ENTER para voltar...");
                         break;
                     case 3:
-                        System.out.println("Informações dos Monstros:");
-                        // Aqui você pode adicionar código para mostrar informações dos monstros
+                        // infos monstros
+                        exibirInfosMonstros();
+                        InputManager.esperarEnter("Pressione ENTER para voltar...");
                         break;
-                    case 4://infos cenarios
+                    case 4:// infos cenarios
                         TipoCenario.exibirInformacoesBasicas();
                         InputManager.esperarEnter("Pressione ENTER para voltar...");
                         break;
@@ -67,114 +181,3 @@ public class Main {
         }
     }
 }
-
-/* TUDO APOS AQUI EH OBSOLETO */
-// aguardar(1);
-
-// // 1. Criar instância do GeradorDeFases
-// GeradorDefases gerador = new ConstrutorDeCenarioFixo();
-
-// // 2. Gerar a lista de fases do jogo
-// List<Fase> fases = gerador.gerar(3);
-
-// // 3. Criar instância do Herói
-// Guerreiro heroi = new Guerreiro("Aragorn");
-// System.out.println("Herói criado: " + heroi.getNome());
-// System.out.println();
-// aguardar(2);
-
-// // 4. Laço principal que passa por cada fase
-// for (int i = 0; i < fases.size(); i++) {
-// Fase fase = fases.get(i);
-
-// // Iniciar a fase
-// fase.iniciar(heroi);
-// aguardar(2);
-
-// // Obter a lista de monstros da fase (precisamos fazer cast para
-// FaseDeCombate)
-// if (fase instanceof ambientacao.fases.FaseDeCombate) {
-// ambientacao.fases.FaseDeCombate faseCombate =
-// (ambientacao.fases.FaseDeCombate) fase;
-// List<Monstro> monstros = faseCombate.getMonstros();
-
-// // Laço de combate para cada monstro da fase
-// for (int j = 0; j < monstros.size(); j++) {
-// Monstro monstro = monstros.get(j);
-
-// System.out.println("--- COMBATE CONTRA: " + monstro.getNome() + " ---");
-// aguardar(2);
-
-// // Laço while que continua enquanto ambos estiverem vivos
-// while (heroi.estaVivo() && monstro.estaVivo()) {
-// System.out.println("----- NOVO TURNO -----");
-
-// // Turno do herói
-// heroi.escolherAcao(monstro);
-// aguardar(2);
-
-// // Se o monstro morreu, sair do loop
-// if (!monstro.estaVivo()) {
-// break;
-// }
-
-// // Turno do monstro
-// monstro.escolherAcao(heroi);
-// aguardar(2);
-
-// System.out.println("----- FIM DO TURNO -----");
-// System.out.println();
-// aguardar(2);
-// }
-
-// // Verificar resultado do combate
-// if (!monstro.estaVivo()) {
-// System.out.println("🎉 " + monstro.getNome() + " foi derrotado!");
-// aguardar(2);
-
-// // Verificar se o monstro é Lootavel e dropar loot
-// if (monstro instanceof Lootavel) {
-// Lootavel monstroLootavel = (Lootavel) monstro;
-// monstroLootavel.droparLoot();
-// aguardar(2);
-// }
-
-// // Ganhar experiência
-// heroi.ganharExperiencia(monstro.getXpConcedido());
-// aguardar(2);
-
-// } else if (!heroi.estaVivo()) {
-// System.out.println("💀 " + heroi.getNome() + " foi derrotado por " +
-// monstro.getNome() + "!");
-// System.out.println("=== FIM DE JOGO ===");
-// return; // Termina o jogo
-// }
-
-// System.out.println();
-// aguardar(2);
-// }
-// }
-
-// // Verificar se a fase foi concluída
-// if (fase.isConcluida()) {
-// System.out.println("✅ Fase " + (i + 1) + " concluída com sucesso!");
-// aguardar(2);
-// } else {
-// System.out.println("❌ Fase " + (i + 1) + " não foi concluída!");
-// break;
-// }
-
-// System.out.println();
-// aguardar(2);
-// }
-
-// // 5. Se o herói completou todas as fases
-// if (heroi.estaVivo()) {
-// System.out.println("🏆 🏆 🏆 PARABÉNS! 🏆 🏆 🏆");
-// aguardar(2);
-// System.out.println(heroi.getNome() + " completou todas as fases e venceu o
-// jogo!");
-// aguardar(2);
-// System.out.println("=== FIM DE JOGO - VITÓRIA ===");
-// }
-// }
