@@ -3,16 +3,16 @@ package entidades.herois;
 import entidades.Personagem;
 import itens.armas.Arma;
 import acoes.AtaqueFisico;
-import acoes.HabilidadeDeFogo;
+import acoes.Furia;
 
 public class Guerreiro extends Heroi {
     
     public Guerreiro(String nome, int forca, int vida, Arma arma, int nivel, int experiencia, int experienciaParaProximoNivel, int sorte) {
-    super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
+        super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
         
         // Definindo lista de ações no construtor
-        adicionarAcao(new AtaqueFisico());
-        adicionarAcao(new HabilidadeDeFogo());
+        this.getAcoes().add(new AtaqueFisico());
+        this.getAcoes().add(new Furia());
     }
     
     @Override
@@ -24,7 +24,11 @@ public class Guerreiro extends Heroi {
     
     @Override
     public boolean HabilidadeEspecial(Personagem alvo) {
-        System.out.println(getNome() + " usa habilidade especial!");
+        System.out.println(getNome() + " usa habilidade especial - Golpe Poderoso!");
+        // Causa dano extra
+        int danoExtra = getDanototal() + 15;
+        alvo.receberDano(danoExtra);
+        System.out.println("Golpe Poderoso causa " + danoExtra + " de dano!");
         return true;
     }
 }

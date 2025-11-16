@@ -8,11 +8,11 @@ public class Arqueiro extends Heroi {
     
     // construtor
     public Arqueiro(String nome, int forca, int vida, Arma arma, int nivel, int experiencia, int experienciaParaProximoNivel, int sorte) {
-    super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
+        super(nome, forca, vida, arma, nivel, experiencia, experienciaParaProximoNivel, sorte);
         
         // Definindo lista de ações no construtor
-        adicionarAcao(new AtaqueFisico());
-        adicionarAcao(new FlechaFamejante());
+        this.getAcoes().add(new AtaqueFisico());
+        this.getAcoes().add(new FlechaFamejante());
     }
     
     @Override
@@ -24,7 +24,13 @@ public class Arqueiro extends Heroi {
     
     @Override
     public boolean HabilidadeEspecial(Personagem alvo) {
-        System.out.println(getNome() + " usa habilidade especial!");
+        System.out.println(getNome() + " usa habilidade especial - Chuva de Flechas!");
+        // Causa dano múltiplo
+        int danoMultiplo = getDanototal() / 2;
+        for (int i = 0; i < 3; i++) {
+            alvo.receberDano(danoMultiplo);
+            System.out.println("Flecha " + (i + 1) + " causa " + danoMultiplo + " de dano!");
+        }
         return true;
     }
 }

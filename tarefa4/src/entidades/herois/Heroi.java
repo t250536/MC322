@@ -1,6 +1,8 @@
 package entidades.herois;
 
 import entidades.Personagem;
+import exceptions.NivelInsuficienteException;
+import exceptions.RecursoInsuficienteException;
 import itens.armas.Arma;
 import interfaces.combate.AcaoDeCombate;
 import interfaces.combate.Combatente;
@@ -15,6 +17,7 @@ public abstract class Heroi extends Personagem {
     private int sorte;
     private List<AcaoDeCombate> acoes;
     private Random random;
+    private int mana;
 
     //construtor
     public Heroi(String nome, int forca, int vida, Arma arma, int nivel, int experiencia, 
@@ -26,20 +29,19 @@ public abstract class Heroi extends Personagem {
         this.sorte = sorte;
         this.acoes = new ArrayList<>();
         this.random = new Random();
+        this.mana = 100;
     }
 
     // Implementação do método escolherAcao da interface Combatente
     @Override
     public void escolherAcao(Combatente alvo) {
+        // Ação normal da lista
         if (acoes.isEmpty()) {
             System.out.println(getNome() + " não tem ações disponíveis! Usando ataque básico.");
-            // Fallback para o ataque normal se não houver ações
             atacar((Personagem) alvo);
             return;
         }
         
-        // Simula escolha do jogador sem entrada de dados
-        // Estratégia: escolhe uma ação aleatória da lista
         int indiceAcao = random.nextInt(acoes.size());
         AcaoDeCombate acaoEscolhida = acoes.get(indiceAcao);
         
@@ -52,7 +54,7 @@ public abstract class Heroi extends Personagem {
         acoes.add(acao);
     }
     
-    // Método para obter a lista de ações (pode ser útil)
+    // Método para obter a lista de ações
     public List<AcaoDeCombate> getAcoes() {
         return acoes;
     }
@@ -95,16 +97,50 @@ public abstract class Heroi extends Personagem {
         setArma(novaArma);
         System.out.println(getNome() + " equipou a arma: " + novaArma.getNome());
     }
+
+    // Novos métodos para o sistema de exceções
+    public void equiparArmaComVerificacao(Arma novaArma) throws NivelInsuficienteException {
+        if (nivel < novaArma.getminNivel()) {
+            throw new NivelInsuficienteException(
+                "Nível insuficiente para equipar " + novaArma.getNome() + 
+                ". Necessário: " + novaArma.getminNivel() + ", seu nível: " + nivel
+            );
+        }
+        setArma(novaArma);
+        System.out.println(getNome() + " equipou a arma: " + novaArma.getNome());
+    }
+
+    public void usarHabilidadeEspecial(Personagem alvo) throws RecursoInsuficienteException {
+        int custoMana = 30;
+        if (mana < custoMana) {
+            throw new RecursoInsuficienteException(
+                "Mana insuficiente! Necessário: " + custoMana + ", disponível: " + mana
+            );
+        }
+        
+        mana -= custoMana;
+        System.out.println(getNome() + " usou habilidade especial! (-" + custoMana + " mana)");
+        HabilidadeEspecial(alvo);
+    }
+    
+    public int getMana() {
+        return mana;
+    }
+    
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
   
     @Override
     public void status() {
-        super.status(); // Chama o método da superclasse Personagem
+        super.status();
         System.out.println("nivel: " + nivel);
         System.out.println("Exp total: " + experiencia + "/Exp prox nivel: " + experienciaParaProximoNivel);
         System.out.println("Sorte atual: " + getSorte());
+        System.out.println("Mana: " + mana);
         System.out.println("Ações disponíveis: " + acoes.size());
     }
     
     @Override
-    public abstract boolean HabilidadeEspecial(Personagem alvo);//metodo abstrato para habilidade especial
+    public abstract boolean HabilidadeEspecial(Personagem alvo);
 }

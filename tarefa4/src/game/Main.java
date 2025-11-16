@@ -1,3 +1,4 @@
+package game;
 import ambientacao.Dificuldade;
 import ambientacao.cenarios.ConstrutorDeCenarioFixo;
 
