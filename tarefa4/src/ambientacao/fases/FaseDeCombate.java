@@ -21,33 +21,32 @@ public class FaseDeCombate implements Fase {
         monstros.add(monstro);
     }
     
-    @Override
     public void iniciar(Heroi heroi) {
         System.out.println("=== INICIANDO FASE: " + tipoDeCenario + " ===");
         System.out.println("Monstros nesta fase: " + monstros.size());
+        for (Monstro monstro : monstros) {
+            // CORREÇÃO: Remover getNivel() pois Monstro não tem esse método
+            System.out.println(" - " + monstro.getNome());
+        }
         concluida = false;
     }
     
-    @Override
     public boolean isConcluida() {
-        // Retorna true apenas quando todos os monstros foram derrotados
         if (concluida) {
             return true;
         }
         
         for (Monstro monstro : monstros) {
             if (monstro.estaVivo()) {
-                return false; // Ainda há monstros vivos
+                return false;
             }
         }
         
-        // Todos os monstros foram derrotados
         concluida = true;
         System.out.println("=== FASE " + tipoDeCenario + " CONCLUÍDA ===");
         return true;
     }
     
-    @Override
     public String getTipoDeCenario() {
         return tipoDeCenario;
     }

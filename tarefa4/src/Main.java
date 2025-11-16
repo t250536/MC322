@@ -1,3 +1,4 @@
+import ambientacao.Dificuldade;
 import ambientacao.cenarios.ConstrutorDeCenarioFixo;
 import ambientacao.cenarios.TipoCenario;
 
@@ -11,173 +12,263 @@ import entidades.monstros.Orc;
 import entidades.monstros.Dragao;
 import entidades.monstros.Goblin;
 
-import interfaces.combate.Combatente;
 import interfaces.mundoCenario.Fase;
-import interfaces.mundoCenario.GeradorDefases;
-import interfaces.recompensa.Lootavel;
+import interfaces.mundoCenario.GeradorDeFases;
 import itens.armas.Arma;
 import java.util.List;
 import utilidades.InputManager;
 
 public class Main {
-
-    // funcao com as escolhas do menu principal
-    private static void menuescolha() {
-        System.out.println("=================================");
-        System.out.println("1 - INICIAR O JOGO");
-        System.out.println("2 - VER INFORMAÇÕES DOS HEROIS");//
-        System.out.println("3 - VER INFORMAÇÕES DOS MONSTROS");
-        System.out.println("4 - VER INFORMAÇÕES DOS CENARIOS");//
-        System.out.println("5 - SAIR DO JOGO");
-        System.out.println("=================================");
+    
+    // Menu principal exatamente conforme especificação
+    private static void exibirMenuPrincipal() {
+        System.out.println("\nTERRAS SOMBRIAS – RPG");
+        System.out.println("==========================================================");
+        System.out.println("[1] Iniciar Novo Jogo");
+        System.out.println("[2] Ver Informações das Classes de Heróis");
+        System.out.println("[3] Ver Informações das Classes de Monstros");
+        System.out.println("[4] Sair do Jogo");
+        System.out.println("==========================================================");
     }
 
-    // funcao para exibir o menu principal e ler a escolha do usuario
-    private static int menuprincial() {
-        menuescolha();
-        return InputManager.lerInteiro("Escolha uma opção (1-5): ", 1, 5);
+    // Menu pós-combate conforme especificação
+    private static void exibirMenuPosCombate(boolean temLoot) {
+        System.out.println("\n=== MENU PÓS-COMBATE ===");
+        System.out.println("[1] Interagir com o Loot" + (temLoot ? "" : " (nenhum loot disponível)"));
+        System.out.println("[2] Ver Informações do Personagem");
+        System.out.println("[3] Desistir do Jogo");
+        System.out.println("========================\n");
     }
 
-    // funcao que cria herois exemplos para menu
+    // Seleção de dificuldade
+    private static Dificuldade selecionarDificuldade() {
+        System.out.println("\n=== SELECIONE A DIFICULDADE ===");
+        System.out.println("[1] Fácil");
+        System.out.println("[2] Normal"); 
+        System.out.println("[3] Difícil");
+        System.out.println("==============================\n");
+        
+        int opcao = InputManager.lerInteiro("Digite sua opção (1-3): ", 1, 3);
+        
+        switch (opcao) {
+            case 1: 
+                System.out.println("Dificuldade Fácil selecionada!");
+                return Dificuldade.FACIL;
+            case 2: 
+                System.out.println("Dificuldade Normal selecionada!");
+                return Dificuldade.NORMAL;
+            case 3: 
+                System.out.println("Dificuldade Difícil selecionada!");
+                return Dificuldade.DIFICIL;
+            default: 
+                return Dificuldade.NORMAL;
+        }
+    }
+
+    // Simulação básica de interação com loot
+    private static void interagirComLoot(Heroi heroi, Monstro monstroDerrotado) {
+        System.out.println("\n=== INTERAGINDO COM LOOT ===");
+        
+        // Simular chance de drop baseada no monstro
+        boolean temLoot = Math.random() > 0.3; // 70% de chance de ter loot
+        
+        if (temLoot) {
+            System.out.println("Você encontrou os seguintes itens:");
+            System.out.println("- 25 de ouro");
+            System.out.println("- 1 Poção de Cura");
+            System.out.println("- Fragmento de " + monstroDerrotado.getNome());
+            
+            boolean pegarItens = InputManager.lerSimNao("Deseja coletar os itens? (s/n)");
+            if (pegarItens) {
+                System.out.println("Itens coletados com sucesso!");
+                // Aqui você pode adicionar a lógica real para adicionar itens ao inventário
+            } else {
+                System.out.println("Você deixou os itens para trás.");
+            }
+        } else {
+            System.out.println("Nenhum item valioso foi encontrado...");
+        }
+        
+        InputManager.esperarEnter("Pressione ENTER para continuar...");
+    }
+
+    // Processar menu pós-combate - CORRIGIDO
+    private static boolean processarMenuPosCombate(Heroi heroi, Monstro monstroDerrotado) {
+        while (true) {
+            // Verificar se há loot disponível (simulação básica)
+            boolean temLoot = Math.random() > 0.3;
+            
+            exibirMenuPosCombate(temLoot);
+            int opcao = InputManager.lerInteiro("Escolha uma opção (1-3): ", 1, 3);
+            
+            switch (opcao) {
+                case 1:
+                    if (temLoot) {
+                        interagirComLoot(heroi, monstroDerrotado);
+                    } else {
+                        System.out.println("Não há loot disponível para interagir.");
+                        InputManager.esperarEnter("Pressione ENTER para continuar...");
+                    }
+                    return true; // Continuar jogo
+                case 2:
+                    System.out.println("\n=== INFORMAÇÕES DO PERSONAGEM ===");
+                    heroi.status(); // CORREÇÃO: exibirStatus() → status()
+                    InputManager.esperarEnter("Pressione ENTER para continuar...");
+                    return true; // Continuar jogo
+                case 3:
+                    boolean confirmar = InputManager.lerSimNao("Tem certeza que deseja desistir? (s/n)");
+                    if (confirmar) {
+                        System.out.println("Desistindo do jogo...");
+                        return false; // Sair do jogo
+                    }
+                    break; // Voltar ao menu se não confirmar
+            }
+        }
+    }
+
+    // Exibir informações dos heróis - CORRIGIDO
     private static void exibirInfosHerois() {
-        // criacao de herois exemplos
         Guerreiro guerreiroExemplo = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
         Paladino paladinoExemplo = new Paladino("Uther", 12, 110, null, 0, 0, 100, 0);
         Arqueiro arqueiroExemplo = new Arqueiro("Legolas", 10, 90, null, 0, 0, 100, 0);
 
-        // exibicao das informacoes dos herois
-        System.out.println("=== INFORMAÇÕES DOS HERÓIS ===");
-        System.out.println("obs: valores de forca e vida iniciais, aumentam conforme o nivel do heroi");
+        System.out.println("\n=== INFORMAÇÕES DAS CLASSES DE HERÓIS ===");
         System.out.println("=== Paladino: ===");
-        paladinoExemplo.status();
-        System.out.println("==================================");
+        paladinoExemplo.status(); // CORREÇÃO: exibirStatus() → status()
         System.out.println("=== Guerreiro: ===");
-        guerreiroExemplo.status();
-        System.out.println("==================================");
+        guerreiroExemplo.status(); // CORREÇÃO: exibirStatus() → status()
         System.out.println("=== Arqueiro: ===");
-        arqueiroExemplo.status();
-        System.out.println("==================================");
+        arqueiroExemplo.status(); // CORREÇÃO: exibirStatus() → status()
     }
 
-    // funcao que cria monstros exemplos para menu
+    // Exibir informações dos monstros - CORRIGIDO
     private static void exibirInfosMonstros() {
-        // criacao de monstros exemplos
         Goblin goblinExemplo = new Goblin("Radbug", 8, 50, null, 20, List.of());
         Orc orcExemplo = new Orc("Gorbag", 12, 80, null, 40, List.of());
         Dragao dragaoExemplo = new Dragao("Ancalagon", 20, 100, null, 100, List.of());
 
-        // exibicao das informacoes dos monstros
-        System.out.println("=== INFORMAÇÕES DOS MONSTROS ===");
-        System.out.println("obs: valores de forca e vida aumentam conforme a dificuldade do cenario");
+        System.out.println("\n=== INFORMAÇÕES DAS CLASSES DE MONSTROS ===");
         System.out.println("=== Goblin: ===");
-        goblinExemplo.status();
-        System.out.println("==================================");
+        goblinExemplo.status(); // CORREÇÃO: exibirStatus() → status()
         System.out.println("=== Orc: ===");
-        orcExemplo.status();
-        System.out.println("==================================");
+        orcExemplo.status(); // CORREÇÃO: exibirStatus() → status()
         System.out.println("=== Dragão: ===");
-        dragaoExemplo.status();
-        System.out.println("==================================");
+        dragaoExemplo.status(); // CORREÇÃO: exibirStatus() → status()
     }
 
-    // funcao que gera um heroi aleatorio
+    // Criar herói aleatório
     private static Heroi criarHeroiAleatorio() {
-        int tipoHeroi = (int) (Math.random() * 3); // Gera um número entre 0 e 2
-        Heroi heroi;
+        int tipoHeroi = (int) (Math.random() * 3);
         switch (tipoHeroi) {
-            case 0:
-                heroi = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
-                break;
-            case 1:
-                heroi = new Paladino("Uther", 12, 110, null, 0, 0, 100, 0);
-                break;
-            case 2:
-                heroi = new Arqueiro("Legolas", 10, 90, null, 0, 0, 100, 0);
-                break;
-            default:
-                heroi = new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
+            case 0: 
+                return new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
+            case 1: 
+                return new Paladino("Uther", 12, 110, null, 0, 0, 100, 0);
+            case 2: 
+                return new Arqueiro("Legolas", 10, 90, null, 0, 0, 100, 0);
+            default: 
+                return new Guerreiro("Aragorn", 15, 100, null, 0, 0, 100, 0);
         }
-        return heroi;
     }
 
-    // funcao que inicia o jogo
+    // Iniciar o jogo
     private static void iniciarJogo() {
-        System.out.println("Iniciando o jogo... (em construção)");
-        // 1. Criar instância do GeradorDeFases
-        GeradorDefases geradorFases = new ConstrutorDeCenarioFixo();
-        // 2. Gerar a lista de fases do jogo
-        List<Fase> fases = geradorFases.gerar(3);
-        // 3. Criar instância do Herói aleatorio
-        Heroi heroigerado = criarHeroiAleatorio();
-        // 4. Laço principal que passa por cada fase
+        // Selecionar dificuldade
+        Dificuldade dificuldade = selecionarDificuldade();
+
+        // Configurar gerador de fases com dificuldade
+        GeradorDeFases geradorFases = new ConstrutorDeCenarioFixo();
+        List<Fase> fases = geradorFases.gerar(3, dificuldade);
+
+        Heroi heroi = criarHeroiAleatorio();
+        System.out.println("\nHerói selecionado: " + heroi.getNome());
+        InputManager.esperarEnter("Pressione ENTER para começar a aventura...");
+
         for (int i = 0; i < fases.size(); i++) {
             Fase fase = fases.get(i);
-            // Iniciar a fase
-            fase.iniciar(heroigerado);
-            // Obter a lista de monstros da fase (precisamos fazer cast para FaseDeCombate)
+            System.out.println("\n=== INICIANDO FASE " + (i + 1) + " ===");
+            fase.iniciar(heroi);
+
             if (fase instanceof ambientacao.fases.FaseDeCombate) {
                 ambientacao.fases.FaseDeCombate faseCombate = (ambientacao.fases.FaseDeCombate) fase;
                 List<Monstro> monstros = faseCombate.getMonstros();
-                // Laço de combate para cada monstro da fase
+
                 for (int j = 0; j < monstros.size(); j++) {
                     Monstro monstro = monstros.get(j);
-                    System.out.println("--- COMBATE CONTRA: " + monstro.getNome() + " ---");
-                    // Laço while que continua enquanto ambos estiverem vivos
-                    while (heroigerado.estaVivo() && monstro.estaVivo()) {
-                        System.out.println("----- NOVO TURNO -----");
+                    System.out.println("\n--- COMBATE CONTRA: " + monstro.getNome() + " ---");
+
+                    // Combate automático
+                    while (heroi.estaVivo() && monstro.estaVivo()) {
+                        System.out.println("\n----- INÍCIO DO TURNO -----");
+                        
                         // Turno do herói
-                        heroigerado.escolherAcao(monstro);
-                        // Se o monstro morreu, sair do loop
+                        heroi.escolherAcao(monstro);
+                        
                         if (!monstro.estaVivo()) {
-                            System.out.println(monstro.getNome() + " foi derrotado!");
-                            InputManager.esperarEnter("Pressione ENTER para continuar...");
+                            System.out.println("\n⭐ " + monstro.getNome() + " foi derrotado! ⭐");
+                            
+                            // Menu pós-combate após derrotar monstro
+                            if (!processarMenuPosCombate(heroi, monstro)) {
+                                return; // Jogador desistiu
+                            }
                             break;
                         }
+                        
                         // Turno do monstro
-                        monstro.escolherAcao(heroigerado);
+                        monstro.escolherAcao(heroi);
+                        
+                        System.out.println("----- FIM DO TURNO -----");
+                    }
+
+                    if (!heroi.estaVivo()) {
+                        System.out.println("\n💀 GAME OVER! " + heroi.getNome() + " foi derrotado! 💀");
+                        return;
                     }
                 }
             }
+            
+            // Entre fases
+            if (i < fases.size() - 1) {
+                System.out.println("\n=== FASE " + (i + 1) + " COMPLETADA ===");
+                InputManager.esperarEnter("Pressione ENTER para avançar para a próxima fase...");
+            }
         }
+        
+        System.out.println("\n🎉 PARABÉNS! Você completou todas as fases! 🎉");
+        InputManager.esperarEnter("Pressione ENTER para voltar ao menu principal...");
     }
 
     public static void main(String[] args) {
         try {
-            // boas vindas
-            System.out.println("=== BEM-VINDO AO RPG - THE GAME! ===");
+            System.out.println("=== TERRAS SOMBRIAS – RPG ===");
 
-            // laco que exibe o menu principal e processa as escolhas do usuario
             while (true) {
-                int opcao = menuprincial();
+                exibirMenuPrincipal();
+                int opcao = InputManager.lerInteiro("Digite sua opção > ", 1, 4);
+                
                 switch (opcao) {
                     case 1:
-                        // iniciar o jogo
                         iniciarJogo();
                         break;
                     case 2:
-                        // infos herois
                         exibirInfosHerois();
-                        InputManager.esperarEnter("Pressione ENTER para voltar...");
+                        InputManager.esperarEnter("Pressione ENTER para voltar ao menu principal...");
                         break;
                     case 3:
-                        // infos monstros
                         exibirInfosMonstros();
-                        InputManager.esperarEnter("Pressione ENTER para voltar...");
+                        InputManager.esperarEnter("Pressione ENTER para voltar ao menu principal...");
                         break;
-                    case 4:// infos cenarios
-                        TipoCenario.exibirInformacoesBasicas();
-                        InputManager.esperarEnter("Pressione ENTER para voltar...");
+                    case 4:
+                        boolean confirmar = InputManager.lerSimNao("Tem certeza que deseja sair? (s/n)");
+                        if (confirmar) {
+                            System.out.println("Saindo do jogo. Até a próxima!");
+                            return;
+                        }
                         break;
-                    case 5:
-                        System.out.println("Saindo do jogo. Até a próxima!");
-                        return; // Encerra o programa
-                    default:
-                        System.out.println("Opção inválida. Tente novamente.");
                 }
             }
         } finally {
-            System.out.println("Obrigado por jogar RPG - THE GAME!");
-            // InputManager.fecharScanner();
+            InputManager.fecharScanner();
         }
     }
 }
