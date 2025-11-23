@@ -1,8 +1,9 @@
 {
   "java.project.sourcePaths": [
+    "tarefa4/src",
     "tarefa2/src",
     "tarefa1/src",
-    "tarefa4/src"
+    "tarefa4"
   ],
   "java.project.outputPath": "bin",
   "java.project.referencedLibraries": [],

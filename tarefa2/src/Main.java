@@ -1,20 +1,21 @@
-import entidades.Personagem;
-import entidades.herois.Heroi;
-import entidades.herois.Guerreiro;
-import entidades.herois.Arqueiro;
-import entidades.herois.Paladino;
-import entidades.monstros.Monstro;
-import entidades.monstros.Orc;
-import ambientacao.fases.Fase;
 import ambientacao.cenarios.ConstrutorDeCenario;
-import itens.armas.melee.Espada;
-import itens.armas.melee.Faca;
-import itens.armas.melee.Machado;
-import itens.armas.Arma;
 
 import java.util.List;
 //gerar numero aleatorio
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.rpg.ambientacao.fases.Fase;
+import com.rpg.entidades.Personagem;
+import com.rpg.entidades.herois.Arqueiro;
+import com.rpg.entidades.herois.Guerreiro;
+import com.rpg.entidades.herois.Heroi;
+import com.rpg.entidades.herois.Paladino;
+import com.rpg.entidades.monstros.Monstro;
+import com.rpg.entidades.monstros.Orc;
+import com.rpg.itens.armas.Arma;
+import com.rpg.itens.armas.melee.Espada;
+import com.rpg.itens.armas.melee.Faca;
+import com.rpg.itens.armas.melee.Machado;
 
 public class Main {
     public static void main(String[] args) throws Exception {

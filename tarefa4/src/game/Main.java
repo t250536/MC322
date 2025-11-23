@@ -92,17 +92,8 @@ public class Main {
                 
                 // CORREÇÃO: Usar o método que realmente lança a exceção
                 try {
-                    // Se o herói tiver o método equiparArmaComVerificacao, use-o
-                    // Caso contrário, vamos simular a verificação manualmente
-                    if (heroi.getNivel() >= espadaEpica.getminNivel()) {
-                        heroi.equiparArma(espadaEpica);
-                        System.out.println("Arma equipada com sucesso!");
-                    } else {
-                        throw new NivelInsuficienteException(
-                            "Nível insuficiente para equipar " + espadaEpica.getNome() + 
-                            ". Necessário: " + espadaEpica.getminNivel() + ", seu nível: " + heroi.getNivel()
-                        );
-                    }
+                    heroi.equiparArmaComVerificacao(espadaEpica);
+                    System.out.println("Arma equipada com sucesso!");
                 } catch (NivelInsuficienteException e) {
                     System.out.println("⚠️  Não foi possível equipar a arma: " + e.getMessage());
                     System.out.println("A arma foi guardada no inventário para uso futuro.");
@@ -146,18 +137,9 @@ public class Main {
                         // Criar um alvo dummy para teste
                         Goblin alvoDummy = new Goblin();
                         
-                        // CORREÇÃO: Verificar manualmente se há mana suficiente
-                        if (heroi.getMana() >= 30) {
-                            // Se tiver mana, usar a habilidade
-                            heroi.setMana(heroi.getMana() - 30);
-                            System.out.println(heroi.getNome() + " usou habilidade especial! (-30 mana)");
-                            heroi.HabilidadeEspecial(alvoDummy);
-                            System.out.println("Habilidade especial usada com sucesso!");
-                        } else {
-                            throw new RecursoInsuficienteException(
-                                "Mana insuficiente! Necessário: 30, disponível: " + heroi.getMana()
-                            );
-                        }
+                        // CORREÇÃO: Usar o método que verifica a mana
+                        heroi.usarHabilidadeEspecial(alvoDummy);
+                        System.out.println("Habilidade especial usada com sucesso!");
                     } catch (RecursoInsuficienteException e) {
                         System.out.println("❌ Erro ao usar habilidade especial: " + e.getMessage());
                     }
@@ -219,7 +201,7 @@ public class Main {
         }
     }
 
-    // Iniciar o jogo - CORRIGIDO
+    // Iniciar o jogo - CORREÇÃO COMPLETA
     private static void iniciarJogo() {
         // Selecionar dificuldade
         Dificuldade dificuldade = selecionarDificuldade();
@@ -238,12 +220,8 @@ public class Main {
             Fase fase = fases.get(i);
             System.out.println("\n=== INICIANDO FASE " + (i + 1) + " ===");
             
-            // Verificar se o método iniciar existe antes de chamar
-            try {
-                fase.iniciar(heroi);
-            } catch (Exception e) {
-                System.out.println("Explorando a fase...");
-            }
+            // CORREÇÃO: Chamar o método iniciar da interface Fase
+            fase.iniciar(heroi);
 
             if (fase instanceof ambientacao.fases.FaseDeCombate) {
                 ambientacao.fases.FaseDeCombate faseCombate = (ambientacao.fases.FaseDeCombate) fase;

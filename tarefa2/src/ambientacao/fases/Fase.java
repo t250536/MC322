@@ -2,7 +2,7 @@ package ambientacao.fases;
 
 import java.util.List;
 
-import entidades.monstros.Monstro;
+import com.rpg.entidades.monstros.Monstro;
 
 public class Fase {
   //atributos

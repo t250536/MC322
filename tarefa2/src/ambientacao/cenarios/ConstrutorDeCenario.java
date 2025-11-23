@@ -2,16 +2,15 @@ package ambientacao.cenarios;
 
 import java.util.List;
 
-import ambientacao.fases.Fase;
-import entidades.monstros.Monstro;
-import entidades.monstros.Orc;
-import itens.armas.melee.Machado;
-import itens.armas.melee.Faca;
-import itens.armas.Arma;
-import itens.armas.melee.Espada;
-
-import entidades.monstros.Dragao;
-import entidades.monstros.Goblin;
+import com.rpg.ambientacao.fases.Fase;
+import com.rpg.entidades.monstros.Dragao;
+import com.rpg.entidades.monstros.Goblin;
+import com.rpg.entidades.monstros.Monstro;
+import com.rpg.entidades.monstros.Orc;
+import com.rpg.itens.armas.Arma;
+import com.rpg.itens.armas.melee.Espada;
+import com.rpg.itens.armas.melee.Faca;
+import com.rpg.itens.armas.melee.Machado;
 
 public class ConstrutorDeCenario {
 

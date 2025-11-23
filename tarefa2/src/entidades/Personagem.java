@@ -1,5 +1,6 @@
 package entidades;//camionho do pacote
-import itens.armas.Arma;
+import com.rpg.entidades.Personagem;
+import com.rpg.itens.armas.Arma;
 
 //classe abstrata Personagem
 public abstract class Personagem {

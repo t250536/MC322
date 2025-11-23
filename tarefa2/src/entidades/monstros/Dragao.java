@@ -2,8 +2,9 @@ package entidades.monstros;
 
 import java.util.List;
 
+import com.rpg.itens.armas.Arma;
+
 import entidades.Personagem;
-import itens.armas.Arma;
 
 public class Dragao extends Monstro {
     private int bafoDeFogo;

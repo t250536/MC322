@@ -32,10 +32,9 @@ public abstract class Heroi extends Personagem {
         this.mana = 100;
     }
 
-    // Implementação do método escolherAcao da interface Combatente
+    // CORREÇÃO: Implementação explícita do método escolherAcao
     @Override
     public void escolherAcao(Combatente alvo) {
-        // Ação normal da lista
         if (acoes.isEmpty()) {
             System.out.println(getNome() + " não tem ações disponíveis! Usando ataque básico.");
             atacar((Personagem) alvo);
@@ -98,7 +97,7 @@ public abstract class Heroi extends Personagem {
         System.out.println(getNome() + " equipou a arma: " + novaArma.getNome());
     }
 
-    // Novos métodos para o sistema de exceções
+    // Método equiparArmaComVerificacao implementado corretamente
     public void equiparArmaComVerificacao(Arma novaArma) throws NivelInsuficienteException {
         if (nivel < novaArma.getminNivel()) {
             throw new NivelInsuficienteException(

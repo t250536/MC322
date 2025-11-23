@@ -1,6 +1,7 @@
 package entidades.herois;//caminho do pacote
+import com.rpg.itens.armas.Arma;
+
 import entidades.Personagem;
-import itens.armas.Arma;
 
 public abstract class Heroi extends Personagem {
   private int nivel;

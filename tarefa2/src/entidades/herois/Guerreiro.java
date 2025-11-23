@@ -1,6 +1,7 @@
 package entidades.herois;
+import com.rpg.itens.armas.Arma;
+
 import entidades.Personagem;
-import itens.armas.Arma;
 
 public class Guerreiro extends Heroi {
     private int furia;

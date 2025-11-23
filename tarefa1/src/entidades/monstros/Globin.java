@@ -1,5 +1,6 @@
 package entidades.monstros;
-import entidades.Personagem;
+import com.rpg.entidades.Personagem;
+import com.rpg.entidades.monstros.Monstro;
 
 public class Globin extends Monstro {
     private int gosmatoxica;

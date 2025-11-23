@@ -46,6 +46,7 @@ public abstract class Personagem implements Combatente {
     }
 
     // Método abstrato da interface Combatente - deve ser implementado pelas subclasses
+    // CORREÇÃO: Mantemos como abstrato para forçar implementação nas subclasses
     public abstract void escolherAcao(Combatente alvo);
 
     // Mantendo os métodos existentes da sua classe

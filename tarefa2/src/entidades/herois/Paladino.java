@@ -1,7 +1,8 @@
 package entidades.herois;
+import com.rpg.itens.armas.Arma;
+
 import entidades.Personagem;
 import entidades.herois.Heroi;
-import itens.armas.Arma;
 
 public class Paladino extends Heroi {
     private int cura;

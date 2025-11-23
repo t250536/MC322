@@ -28,7 +28,7 @@ public abstract class Monstro extends Personagem implements Lootavel {
         this.lootBasico = null;
     }
 
-    // Implementação do método escolherAcao da interface Combatente
+    // CORREÇÃO: Implementação explícita do método escolherAcao
     @Override
     public void escolherAcao(Combatente alvo) {
         if (acoes.isEmpty()) {

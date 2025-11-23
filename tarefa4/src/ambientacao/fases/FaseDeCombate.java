@@ -21,16 +21,17 @@ public class FaseDeCombate implements Fase {
         monstros.add(monstro);
     }
     
+    @Override
     public void iniciar(Heroi heroi) {
         System.out.println("=== INICIANDO FASE: " + tipoDeCenario + " ===");
         System.out.println("Monstros nesta fase: " + monstros.size());
         for (Monstro monstro : monstros) {
-            // CORREÇÃO: Remover getNivel() pois Monstro não tem esse método
             System.out.println(" - " + monstro.getNome());
         }
         concluida = false;
     }
     
+    @Override
     public boolean isConcluida() {
         if (concluida) {
             return true;
@@ -47,6 +48,7 @@ public class FaseDeCombate implements Fase {
         return true;
     }
     
+    @Override
     public String getTipoDeCenario() {
         return tipoDeCenario;
     }
